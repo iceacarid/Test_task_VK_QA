@@ -20,15 +20,22 @@ test.describe('Uchi.ru widget ', () => {
     await expect(widgetPage.getWidgetBody()).toBeVisible()
   });
 
+  test('finds articles by search query', async () => {
+    await widgetPage.openWidget();
+
+    await widgetPage.search('пароль');
+
+    await expect(widgetPage.getArticleItems().first()).toBeVisible();
+    await expect(widgetPage.getArticleItems().first()).toContainText(/парол/i);
+  });
+
   test('has correct title', async ({ page }) => {
     await widgetPage.openWidget();
 
-    const articles = await widgetPage.getPopularArticles();
-
-    await articles[0].click();
+    await widgetPage.getPopularArticles().first().click();
 
     await widgetPage.clickWriteToUs();
 
-    expect(await widgetPage.getTitle()).toEqual('Связь с поддержкой');
+    await expect(widgetPage.getTitle()).toHaveText('Связь с поддержкой');
   });
 });
